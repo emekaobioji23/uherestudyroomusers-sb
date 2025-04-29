@@ -1,0 +1,131 @@
+<html>
+<head>
+  <title>Uhere Study Room Users</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" type="image/x-icon" href="https://scontent.fabb1-2.fna.fbcdn.net/v/t39.30808-6/459203571_8184624511624556_4159880415406589827_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=86c6b0&_nc_ohc=GFmKEQgVPIQQ7kNvgHdS-H-&_nc_zt=23&_nc_ht=scontent.fabb1-2.fna&_nc_gid=A51R7C8dMo67w-EBe7QdPzM&oh=00_AYAnrPQMaSmqmezUf3VUzlDzCgUMAGwhonbM6Yctd4N_dQ&oe=66EE2983" />
+</head>
+<body>
+    <input type="text" id="search-input" placeholder="Start typing to search..." />
+
+    <div id="content">
+        <p>This content will be replaced.</p>
+      </div>
+      <script>
+        let timeout = null;
+    
+        document.getElementById('search-input').addEventListener('input', function(event) {
+          const query = event.target.value;
+          
+          clearTimeout(timeout); // Clear the timeout if there's already one running
+          
+          if (query.length > 0) {
+            const baseUrl = `${window.location.protocol}//${window.location.host}`;
+            console.log(baseUrl);
+            const apiUrl = `${baseUrl}/api/users?searchTerm=${query}`;
+            console.log(apiUrl);
+            timeout = setTimeout(() => {
+              // Replace 'your-api-endpoint' with the actual API endpoint
+              fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                  const contentDiv = document.getElementById('content');
+                  contentDiv.innerHTML = ''; // Clear previous results
+                  
+                  if (data.length > 0) {
+                    /*for (let i = 0; i < data.length; i++) {
+                        alert(data[i].join(' ')); // Print each row, elements separated by spaces
+                    }*/
+                    let date;  // Column A
+                    let picture_url;  // Column B
+                    let surname;  // Column C
+                    let firstname;  // Column D
+                    let othernames;  // Column E
+                    let mobile;  // Column F
+                    let dob;  // Column G
+                    let hostel;  // Column H
+                    let religion;  // Column I
+                    let dept;  // Column J
+                    //let olevelresults;  // Column K
+                    //let how_knew_centre;  // Column L
+                    //let why_choose_centre;  // Column M
+                    //let organisations;  // Column N
+                    //let hobbies;  // Column O
+                    //let introduced_by;  // Column P
+                    //let home_address;  // Column Q
+                    //let secschool;  // Column R
+                    let level;  // Column S
+                    //let post_ume_score;  // Column T
+                    //let cgpa;  // Column U
+                    //let email;  // Column V
+                    let interested_in_continous_spiritual_dev;  // Column W
+                    //let interviewd;  // Column X
+                    //let interviewer;  // Column Y
+                    //let accepted;  // Column Z
+                    let cum_paid;  // Column AA
+                    let date_first_deposit;  // Column AA
+                    let html = '<h1>Uhere Study Room Users</h1><ul>';
+                    for (let i = 0; i < data.length; i++) {  // Skip header row
+                        date = data[i].timestamp;  // Column A
+                        picture_url = data[i].passportPhotograph;  // Column B
+                        surname = data[i].surname;  // Column C
+                        firstname = data[i].firstName;  // Column D
+                        othernames = data[i].otherNames;  // Column E
+                        mobile = data[i].mobilePhoneNumber;  // Column F
+                        dob = data[i].dateOfBirth;  // Column G
+                        hostel = data[i].hostelAddress;  // Column H
+                        religion = data[i].religion;  // Column I
+                        dept = data[i].department;  // Column J
+                        //olevelresults = data[i][10];  // Column K
+                        //how_knew_centre = data[i][11];  // Column L
+                        //why_choose_centre = data[i][12];  // Column M
+                        //organisations = data[i][13];  // Column N
+                        //hobbies = data[i][14];  // Column O
+                        //introduced_by = data[i][15];  // Column P
+                        //home_address = data[i][16];  // Column Q
+                        //secschool = data[i][17];  // Column R
+                        level = data[i].level;  // Column S
+                        //post_ume_score = data[i][19];  // Column T
+                        //cgpa = data[i][20];  // Column U
+                        //email = data[i][21];  // Column V
+                        interested_in_continous_spiritual_dev = data[i].areUInterestedInContSpiritDoctMoralDev;  // Column W
+                        //interviewd = data[i][23];  // Column X
+                        //interviewer = data[i][24];  // Column Y
+                        //accepted = data[i][25];  // Column Z
+                        cum_paid = data[i].cummPaid;  // Column AA
+                        date_first_deposit = data[i].dateOfPreviousDeposit;  // Column AA
+                        date_next_deposit = data[i].dateOfNextPayment;  // Column AA
+                    
+                        html += `<li>`+
+                                `<img id="image${i}" width ='100%' height='auto' src="https://res.cloudinary.com/dpkkvko9m/image/upload/${picture_url}"/>`+
+                                `<p>${surname} ${firstname} ${othernames} </p>`+
+                                `<p>cummulative paid: ${cum_paid}</p>`+
+                                `<p class="highlight">date of next payment: <strong>${date_next_deposit}</strong></p>`+
+                                `<p>date of previous deposit: ${date_first_deposit}</p>`+
+                                `<p>interested in continous spiritual, moral and doctrinal development: ${interested_in_continous_spiritual_dev}</p>`+
+                                `<p>Date of library registration: ${date}</p>`+
+                                `<p>Mobile: ${mobile}</p>`+
+                                `<p>Date of birth: ${dob}</p>`+
+                                `<p>religion: ${religion}</p>`+
+                                `<p>dept: ${dept}</p>`+
+                                `<p>level: ${level}</p>`+
+                                `</li>`;
+                    }
+                    html += '</ul>';
+                    
+                    /*// Return the HTML content
+                    return HtmlService.createHtmlOutput(html);*/
+                    contentDiv.innerHTML = html;
+                  } else {
+                    contentDiv.innerHTML = '<p>No results found</p>';
+                  }
+                })
+                .catch(error => console.error('Error fetching data:', error));
+            }, 300); // Add a small delay to avoid too many requests
+          } else {
+            document.getElementById('content').innerHTML = ''; // Clear results when input is empty
+          }
+        });
+      </script>
+</body>
+</html>
