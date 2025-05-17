@@ -70,7 +70,9 @@ public class ApplicationAPIController {
            userComparisonService.updateEntities();
            List<User> newUsers = userComparisonService.updateDatabseWithNewUsersInGoogleSheet();
            userProcessingService.processUsersPassportPhotographs(newUsers);
+           System.out.println("About to persist new Users");
            userService.saveUsers(newUsers);
+           System.out.println("has finished persisting new Users");
            List<User> matchedUsers = userService.getBySurnameIgnoreCaseOrFirstnameIgnoreCaseOrOthernamesIgnoreCase(searchTerm, searchTerm, searchTerm);
            System.out.println("ApplicationController:getUsers:"+searchTerm+" matched users count is "+matchedUsers.size());
            System.out.println("ApplicationController:getUsers:exits");

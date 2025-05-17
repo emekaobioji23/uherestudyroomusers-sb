@@ -22,7 +22,7 @@ import java.sql.Timestamp;
  * @author emeka
  */
 @Entity
-@Table(catalog = "uherelibrary", schema = "", uniqueConstraints = {
+@Table(catalog = "uherelibrary", name="user", schema = "public", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"id"})})
 @NamedQueries({
     @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
@@ -37,19 +37,19 @@ public class User implements Serializable {
  * The User id.
 */
     @Id
-    @Basic(optional = false)
-    @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(nullable = false,name = "id")
     private Integer id;
 /**
  * The User creation time.
 */
-    @Column(name = "timestamp", columnDefinition = "DATETIME")
+    @Column(name = "timestamp")
     private Timestamp timestamp;
 /**
  * The email address
 */
-    @Column(name = "emailaddress")
+    @Column(name = "emailaddress",unique = true)
     private String emailAddress;
 /**
  * The User passport photograph.
@@ -335,7 +335,7 @@ public class User implements Serializable {
  * @return the email address as string
  */
     public String getEmailAddress() {
-        return emailAddress;
+        return emailAddress != null ? emailAddress.trim() : null;
     }
 /**
  * This method sets the entity's emailAddress

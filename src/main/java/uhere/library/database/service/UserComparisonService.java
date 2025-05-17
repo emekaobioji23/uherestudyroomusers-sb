@@ -68,11 +68,11 @@ public class UserComparisonService {
  * @throws ParseException
  */       
     public List<User> updateDatabseWithNewUsersInGoogleSheet() throws IOException,GeneralSecurityException, ParseException {
-        // fetch latest user from database
-        User user = userService.getLatestUser();
-
+        System.out.println("UserComparisonService:updateDatabseWithNewUsersInGoogleSheet:begins");
+        List<String> emailsInDB = userService.findAll().stream().map(User::getEmailAddress).collect(Collectors.toList());      
         // Fetch users from Google Sheets after succeeding latest user in database
-        List<User> newUsers = addUsersFromGoogleSheetToDBAfterTimeStamp(user);
+        List<User> newUsers = addNewUsersFromGoogleSheetToDB(emailsInDB);
+        System.out.println("UserComparisonService:updateDatabseWithNewUsersInGoogleSheet:ends");
         return newUsers;
         //userService.saveUsers(newUsers);
     }
@@ -87,25 +87,28 @@ public class UserComparisonService {
  * @throws IOException if there are I/O errors
  * @throws ParseException
  */      
-    private List<User> addUsersFromGoogleSheetToDBAfterTimeStamp(User latestUserInDatabase) throws IOException, GeneralSecurityException, ParseException {
+    private List<User> addNewUsersFromGoogleSheetToDB(List<String> emailsInDB) throws IOException, GeneralSecurityException, ParseException {
         System.out.println("UserComparisonService:addUsersFromGoogleSheetToDBAfterTimeStamp:begins");
+        User user;
         List<User>  users = new ArrayList<>();
 
         // Define range (Example: "Users!A:C" for emails, names, and roles)
         String range = SHEET_NAME;
 
-        ValueRange response = googleSheetsService.getSheetsService()
-                .spreadsheets()
-                .values()
-                .get(SPREADSHEET_ID, range)
-                .execute();
+        ValueRange response = googleSheetsService.getSheetsService().spreadsheets().values().get(SPREADSHEET_ID, range).execute();
 
         List<List<Object>> values = response.getValues();
         if (values == null || values.isEmpty()) {
             System.out.println("No data found.");
-            //return users;
+            return users;
         }
-        values = filterByTimestamp(values, latestUserInDatabase.getTimestamp());
+        
+        // skip the first row (usually header)
+        values = values.stream().skip(1).collect(Collectors.toList());
+        
+        System.out.println("Before filtering by emails in DB, the spreadsheet contains "+values.size()+" users");
+        values = filterByEmails(values, emailsInDB);
+        System.out.println("After filtering by emails in DB, the spreadsheet contains "+values.size()+" users");
         Timestamp timestamp;
         String emailAddress, passportPhotograph, surname, firstName, otherNames, mobilePhoneNumber, dateOfBirth, religion, hostelAddress, homeAddress, department, secondarySchoolAttended, level, oLevelResults, postUmeScore, cgpaAtTheEndOfSession, howDidYouGetToKnowTheCentre, whyChooseToStudyAtUhereStudyRoom, organizationsYouBelongTo, hobbies, introducedToUhereStudyCentreBy, areUInterestedInContSpiritDoctMoralDev, interviewed, interviewer, accepted, cummPaid, dateOfPreviousDeposit, dateOfNextPayment, comment, paymentMode, probablyInNsukka;  
         for (List<Object> row : values) {
@@ -123,7 +126,7 @@ public class UserComparisonService {
                     mobilePhoneNumber = row.size() > 6 ? row.get(6).toString() : ""; // Mobile number in column G  
                     dateOfBirth = row.size() > 7 ? row.get(7).toString() : ""; // Date of birth in column H  
                     religion = row.size() > 8 ? row.get(8).toString() : ""; // Religion in column I  
-                    hostelAddress = row.size() > 9 ? row.get(9).toString() : ""; // Hostel address in column J  
+                    hostelAddress = row.size() > 9 ? row.get(9).toString(): ""; // Hostel address in column J  
                     homeAddress = row.size() > 10 ? row.get(10).toString() : ""; // Home address in column K  
                     department = row.size() > 11 ? row.get(11).toString() : ""; // Department in column L  
                     secondarySchoolAttended = row.size() > 12 ? row.get(12).toString() : ""; // Secondary school in column M  
@@ -147,7 +150,7 @@ public class UserComparisonService {
                     paymentMode = row.size() > 30 ? row.get(30).toString() : ""; // Payment mode in column AE  
                     probablyInNsukka = row.size() > 31 ? row.get(31).toString() : ""; // Probably in Nsukka in column AF
                     //System.out.println("about add user to users "+row);
-                    users.add(new User(
+                    user=new User(
                         timestamp,
                         emailAddress,
                         passportPhotograph,
@@ -180,7 +183,8 @@ public class UserComparisonService {
                         comment,
                         paymentMode,
                         probablyInNsukka
-                    ));
+                    );
+                    users.add(user);
                     //System.out.println("finished adding user to users "+users.size());
                     //create user here
                 }
@@ -228,45 +232,29 @@ public class UserComparisonService {
         // Convert to Timestamp
         return new Timestamp(parsedDate.getTime());
     }
-/**
- * This method returns the rows of a table which has timestamp cell containing
- * a timestamp value that is later than the thresholdTimestamp.
- * @param values is the table as a list of list of objects
- * @param thresholdTimestamp as the timestamp value later than which a row gets selected 
- * @return a subset of the table with selected rows
- */  
-    private List<List<Object>> filterByTimestamp(List<List<Object>> values, Timestamp thresholdTimestamp) {
-        if (values == null || values.isEmpty()) {
-            return List.of(); // Return an empty list if no data
-        }
 
-        // Define the primary and fallback date formats
-        SimpleDateFormat fullFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        SimpleDateFormat dateOnlyFormat = new SimpleDateFormat("dd/MM/yyyy");
+/**
+ * This method returns the rows of a table which has email cell containing
+ * a an email in the list of emails input.
+ * @param values is the table as a list of list of objects
+ * @param emails is the list of emails
+ * @return a subset of the table with selected rows as String
+ */    
+    private List<List<Object>> filterByEmails(List<List<Object>> values, List<String> emails) {
+        List<String> normalizedEmails = emails.stream()
+                .map(String::toLowerCase)
+                .collect(Collectors.toList());
 
         return values.stream()
-                .filter(row -> {
-                    if (row.isEmpty()) return false;
-                    try {
-                        //System.out.println("row.get(0).toString() = " + row.get(0).toString());
-
-                        Timestamp rowTimestamp;
-                        try {
-                            // First attempt: Parse full datetime format
-                            rowTimestamp = new Timestamp(fullFormat.parse(row.get(0).toString()).getTime());
-                        } catch (ParseException e) {
-                            // If parsing fails, assume "dd/MM/yyyy" and append " 00:00:00"
-                            rowTimestamp = new Timestamp(dateOnlyFormat.parse(row.get(0).toString()).getTime());
-                        }
-
-                        // Compare timestamps
-                        return rowTimestamp.after(thresholdTimestamp);
-                    } catch (ParseException e) {
-                        return false; // Skip rows with invalid timestamps
-                    }
-                })
+                /*.map(row -> row.stream()
+                        .map(cell -> cell != null ? cell.trim() : "")
+                        .collect(Collectors.toList())
+                )*/
+                .filter(row -> row.size() > 1 &&
+                        !normalizedEmails.contains(row.get(1).toString().toLowerCase()))
                 .collect(Collectors.toList());
     }
+
 /**
  * This method escapes the special characters in the cells of a row
  * @param inputList is the row with some or all cells containing special characters

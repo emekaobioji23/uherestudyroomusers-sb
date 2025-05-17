@@ -41,6 +41,8 @@ public class UserProcessingService {
  * @param users is the list of User entities to check.
  */
     public void processUsersPassportPhotographs(List<User> users) {
+        int count = 0;
+        System.out.println("UserProcessingService:processUsersPassportPhotographs - starts");
         for (User user : users) {
             String googleDriveFileID = googleDriveService.extractDriveFileId(user.getPassportPhotograph());
 
@@ -56,9 +58,10 @@ public class UserProcessingService {
                     }
                 }
             } else {
-                System.out.println("File already exists in Cloudinary: " + googleDriveFileID);
+                System.out.println(++count+")File already exists in Cloudinary: " + googleDriveFileID);
             }
         }
+        System.out.println("UserProcessingService:processUsersPassportPhotographs - ends");
     }
 /**
  * the method iterates through a list of User entities. For each entity, it 
