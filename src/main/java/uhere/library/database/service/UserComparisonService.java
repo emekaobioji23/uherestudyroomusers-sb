@@ -114,41 +114,40 @@ public class UserComparisonService {
         for (List<Object> row : values) {
             if (!row.isEmpty() && row.size() > 1) { // Ensure row has enough data
                 //row = escapeSpecialCharacters(row);
-                timestamp = !row.isEmpty() ? convertStringToTimestamp(row.get(0).toString()) : null; // Timestamp in column A
-                emailAddress = row.size() > 1 ? row.get(1).toString() : ""; // Email in column B  
+                timestamp = !row.isEmpty() ? convertStringToTimestamp(row.get(0).toString().trim()) : null; // Timestamp in column A
+                emailAddress = row.size() > 1 ? row.get(1).toString().trim() : ""; // Email in column B  
                 if(isValidEmailAddress(emailAddress)==true){
-                    //System.out.println(emailAddress+" is valid email address is "+isValidEmailAddress(emailAddress));
-                    passportPhotograph = row.size() > 2 ? row.get(2).toString() : ""; // GoogleDrive Passport Photograph URL in column C 
+                    passportPhotograph = row.size() > 2 ? row.get(2).toString().trim() : ""; // GoogleDrive Passport Photograph URL in column C 
                     passportPhotograph = googleDriveService.extractDriveFileId(passportPhotograph);
-                    surname = row.size() > 3 ? row.get(3).toString() : ""; // Surname in column D  
-                    firstName = row.size() > 4 ? row.get(4).toString() : ""; // First name in column E  
-                    otherNames = row.size() > 5 ? row.get(5).toString() : ""; // Other names in column F  
-                    mobilePhoneNumber = row.size() > 6 ? row.get(6).toString() : ""; // Mobile number in column G  
-                    dateOfBirth = row.size() > 7 ? row.get(7).toString() : ""; // Date of birth in column H  
-                    religion = row.size() > 8 ? row.get(8).toString() : ""; // Religion in column I  
-                    hostelAddress = row.size() > 9 ? row.get(9).toString(): ""; // Hostel address in column J  
-                    homeAddress = row.size() > 10 ? row.get(10).toString() : ""; // Home address in column K  
-                    department = row.size() > 11 ? row.get(11).toString() : ""; // Department in column L  
-                    secondarySchoolAttended = row.size() > 12 ? row.get(12).toString() : ""; // Secondary school in column M  
-                    level = row.size() > 13 ? row.get(13).toString() : ""; // Level in column N  
-                    oLevelResults = row.size() > 14 ? row.get(14).toString() : ""; // O-Level results in column O 
-                    postUmeScore = row.size() > 15 ? row.get(15).toString() : ""; // Post UME score in column P  
-                    cgpaAtTheEndOfSession = row.size() > 16 ? row.get(16).toString() : ""; // CGPA in column Q  
-                    howDidYouGetToKnowTheCentre = row.size() > 17 ? row.get(17).toString() : ""; // Referral source in column R  
-                    whyChooseToStudyAtUhereStudyRoom = row.size() > 18 ? row.get(18).toString() : ""; // Study choice in column S  
-                    organizationsYouBelongTo = row.size() > 19 ? row.get(19).toString() : ""; // Organizations in column T  
-                    hobbies = row.size() > 20 ? row.get(20).toString() : ""; // Hobbies in column U  
-                    introducedToUhereStudyCentreBy = row.size() > 21 ? row.get(21).toString() : ""; // Introduced by in column V  
-                    areUInterestedInContSpiritDoctMoralDev = row.size() > 22 ? row.get(22).toString() : ""; // Interest in development in column W  
-                    interviewed = row.size() > 23 ? row.get(23).toString() : ""; // Interviewed in column X  
-                    interviewer = row.size() > 24 ? row.get(24).toString() : ""; // Interviewer in column Y  
-                    accepted = row.size() > 25 ? row.get(25).toString() : ""; // Accepted in column Z  
-                    cummPaid = row.size() > 26 ? row.get(26).toString() : ""; // Cumulative payment in column AA  
-                    dateOfPreviousDeposit = row.size() > 27 ? row.get(27).toString() : ""; // Previous deposit date in column AB  
-                    dateOfNextPayment = row.size() > 28 ? row.get(28).toString() : ""; // Next payment date in column AC  
-                    comment = row.size() > 29 ? row.get(29).toString() : ""; // Comment in column AD  
-                    paymentMode = row.size() > 30 ? row.get(30).toString() : ""; // Payment mode in column AE  
-                    probablyInNsukka = row.size() > 31 ? row.get(31).toString() : ""; // Probably in Nsukka in column AF
+                    surname = row.size() > 3 ? row.get(3).toString().trim() : ""; // Surname in column D  
+                    firstName = row.size() > 4 ? row.get(4).toString().trim() : ""; // First name in column E  
+                    otherNames = row.size() > 5 ? row.get(5).toString().trim() : ""; // Other names in column F  
+                    mobilePhoneNumber = row.size() > 6 ? row.get(6).toString().trim() : ""; // Mobile number in column G  
+                    dateOfBirth = row.size() > 7 ? row.get(7).toString().trim() : ""; // Date of birth in column H  
+                    religion = row.size() > 8 ? row.get(8).toString().trim() : ""; // Religion in column I  
+                    hostelAddress = row.size() > 9 ? row.get(9).toString().trim(): ""; // Hostel address in column J  
+                    homeAddress = row.size() > 10 ? row.get(10).toString().trim() : ""; // Home address in column K  
+                    department = row.size() > 11 ? row.get(11).toString().trim() : ""; // Department in column L  
+                    secondarySchoolAttended = row.size() > 12 ? row.get(12).toString().trim() : ""; // Secondary school in column M  
+                    level = row.size() > 13 ? row.get(13).toString().trim() : ""; // Level in column N  
+                    oLevelResults = row.size() > 14 ? row.get(14).toString().trim() : ""; // O-Level results in column O 
+                    postUmeScore = row.size() > 15 ? row.get(15).toString().trim() : ""; // Post UME score in column P  
+                    cgpaAtTheEndOfSession = row.size() > 16 ? row.get(16).toString().trim() : ""; // CGPA in column Q  
+                    howDidYouGetToKnowTheCentre = row.size() > 17 ? row.get(17).toString().trim() : ""; // Referral source in column R  
+                    whyChooseToStudyAtUhereStudyRoom = row.size() > 18 ? row.get(18).toString().trim() : ""; // Study choice in column S  
+                    organizationsYouBelongTo = row.size() > 19 ? row.get(19).toString().trim() : ""; // Organizations in column T  
+                    hobbies = row.size() > 20 ? row.get(20).toString().trim() : ""; // Hobbies in column U  
+                    introducedToUhereStudyCentreBy = row.size() > 21 ? row.get(21).toString().trim() : ""; // Introduced by in column V  
+                    areUInterestedInContSpiritDoctMoralDev = row.size() > 22 ? row.get(22).toString().trim() : ""; // Interest in development in column W  
+                    interviewed = row.size() > 23 ? row.get(23).toString().trim() : ""; // Interviewed in column X  
+                    interviewer = row.size() > 24 ? row.get(24).toString().trim() : ""; // Interviewer in column Y  
+                    accepted = row.size() > 25 ? row.get(25).toString().trim() : ""; // Accepted in column Z  
+                    cummPaid = row.size() > 26 ? row.get(26).toString().trim() : ""; // Cumulative payment in column AA  
+                    dateOfPreviousDeposit = row.size() > 27 ? row.get(27).toString().trim() : ""; // Previous deposit date in column AB  
+                    dateOfNextPayment = row.size() > 28 ? row.get(28).toString().trim() : ""; // Next payment date in column AC  
+                    comment = row.size() > 29 ? row.get(29).toString().trim() : ""; // Comment in column AD  
+                    paymentMode = row.size() > 30 ? row.get(30).toString().trim() : ""; // Payment mode in column AE  
+                    probablyInNsukka = row.size() > 31 ? row.get(31).toString().trim() : ""; // Probably in Nsukka in column AF
                     //System.out.println("about add user to users "+row);
                     user=new User(
                         timestamp,
@@ -187,6 +186,8 @@ public class UserComparisonService {
                     users.add(user);
                     //System.out.println("finished adding user to users "+users.size());
                     //create user here
+                }else{
+                    System.out.println(emailAddress+" is invalid email address");
                 }
             }
         }
@@ -251,7 +252,7 @@ public class UserComparisonService {
                         .collect(Collectors.toList())
                 )*/
                 .filter(row -> row.size() > 1 &&
-                        !normalizedEmails.contains(row.get(1).toString().toLowerCase()))
+                        !normalizedEmails.contains(row.get(1).toString().trim().toLowerCase()))
                 .collect(Collectors.toList());
     }
 
@@ -305,12 +306,12 @@ public class UserComparisonService {
             for (List<Object> row : values) {
                 if (!row.isEmpty() && row.size() > 1) { // Ensure row has enough data
                     //row = escapeSpecialCharacters(row);
-                    emailAddress = row.size() > 1 ? row.get(1).toString() : ""; // Email in column B  
-                    mobilePhoneNumber = row.size() > 6 ? row.get(6).toString() : ""; // Mobile number in column G  
-                    cummPaid = row.size() > 26 ? row.get(26).toString() : ""; // Cumulative payment in column AA  
-                    dateOfPreviousDeposit = row.size() > 27 ? row.get(27).toString() : ""; // Previous deposit date in column AB  
-                    dateOfNextPayment = row.size() > 28 ? row.get(28).toString() : ""; // Next payment date in column AC  
-                    paymentMode = row.size() > 30 ? row.get(30).toString() : ""; // Payment mode in column AE
+                    emailAddress = row.size() > 1 ? row.get(1).toString().trim() : ""; // Email in column B  
+                    mobilePhoneNumber = row.size() > 6 ? row.get(6).toString().trim() : ""; // Mobile number in column G  
+                    cummPaid = row.size() > 26 ? row.get(26).toString().trim() : ""; // Cumulative payment in column AA  
+                    dateOfPreviousDeposit = row.size() > 27 ? row.get(27).toString().trim() : ""; // Previous deposit date in column AB  
+                    dateOfNextPayment = row.size() > 28 ? row.get(28).toString().trim() : ""; // Next payment date in column AC  
+                    paymentMode = row.size() > 30 ? row.get(30).toString().trim() : ""; // Payment mode in column AE
                    // System.out.println("before search emailAddress=["+emailAddress+"][mobilePhoneNumber="+mobilePhoneNumber+"]!");
                     aUser = userService.getUserByEmailAddressAndMobilePhoneNumber(emailAddress.trim(), mobilePhoneNumber.trim());
                     //aUser = userService.getUserByEmailAddress(emailAddress);
